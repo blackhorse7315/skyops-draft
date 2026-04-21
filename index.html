@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 
@@ -204,6 +205,13 @@
                 margin: 1cm;
             }
         }
+.custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(59, 130, 246, 0.5);
+    border-radius: 10px;
+}
     </style>
 </head>
 
@@ -789,7 +797,7 @@
     <!-- ========================================== -->
     <script>
         // --- KONFIGURASI GOOGLE SHEETS ---
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyBWYvnZziF0PkT56vCl7mUqZi5ME5O6LaqQ913L5q5Hq4M-fyKnoOf_pOFlbUUwn4mJg/exec';
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxArc2KeccryAdUdOPz8k2pvgJrYdC_L_9-62DaUTzH7acpe0O8BKhBKhSld50Quw1Wqg/exec';
         // --- GLOBAL STATE ---
         let usersData = [];
         let currentUser = null;
