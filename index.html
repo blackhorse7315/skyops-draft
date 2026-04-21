@@ -153,6 +153,19 @@
             pointer-events: auto;
         }
 
+        .leaflet-control-layers {
+            background: rgba(15, 23, 42, 0.9) !important;
+            color: white !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            border-radius: 12px !important;
+            padding: 8px !important;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5) !important;
+        }
+
+        .leaflet-control-layers-list {
+            padding: 4px;
+        }
+
         /* Flight HUD Data Box */
         .hud-data-box {
             background: rgba(15, 23, 42, 0.85);
@@ -269,7 +282,7 @@
         </div>
     </div> <!-- Add/Edit User Modal -->
     <div id="userModal" class="print:hidden fixed inset-0 z-[10000] hidden flex items-center justify-center bg-black/60 backdrop-blur-sm p-2 sm:p-4">
-        <div class="glass-panel w-full max-w-md p-5 sm:p-6 rounded-2xl relative"> <button onclick="closeUserModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white cursor-pointer z-50 p-1"><i class="fas fa-times text-lg"></i></button>
+        <div class="glass-panel w-full max-w-md p-5 sm:p-6 rounded-2xl relative"> <button onclick="closeUserModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white z-50 cursor-pointer p-1"><i class="fas fa-times text-lg"></i></button>
             <h3 id="modalTitle" class="text-lg sm:text-xl font-bold mb-4 pr-6">Add New User</h3>
             <form id="userForm" onsubmit="saveUser(event)" class="space-y-3 sm:space-y-4"> <input type="hidden" id="userId">
                 <div> <label class="text-xs text-slate-400">Full Name</label> <input type="text" id="uName" required class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 mt-1 text-sm outline-none focus:border-blue-500"> </div>
@@ -315,7 +328,6 @@
             <!-- ========================================== -->
             <div id="tab-map" class="tab-content absolute inset-0 fade-in h-full w-full">
                 <div id="mapTransformWrapper" class="absolute inset-0 z-0 bg-[#0f172a] overflow-hidden">
-                    <!-- Penambahan will-change dan translate3d untuk memaksa rendering menggunakan GPU -->
                     <div id="realMap" class="w-full h-full cursor-crosshair" style="transition: transform 0.1s linear; will-change: transform; transform: translate3d(0,0,0); backface-visibility: hidden;"></div>
                 </div> <!-- Floating Status Bar (Top Left) -->
                 <div class="absolute top-2 left-2 sm:top-4 sm:left-4 z-[1000] flex gap-0 shadow-lg rounded-full backdrop-blur-sm transform scale-90 sm:scale-100 origin-top-left"> <span id="gps-status" class="px-3 py-1.5 sm:px-4 sm:py-2 bg-slate-900/80 text-slate-400 border border-slate-700 rounded-l-full text-[10px] sm:text-xs transition-colors font-bold tracking-wider">GPS STANDBY</span> <span id="gps-coordinates" class="px-3 py-1.5 sm:px-4 sm:py-2 bg-slate-900/80 text-slate-300 border border-slate-700 border-l-0 rounded-r-full text-[10px] sm:text-xs font-mono">LAT: -- | LON: --</span> </div> <!-- Map Overlay (For Active Route Indicator - Non Sim) -->
@@ -330,7 +342,7 @@
                         <div class="flex items-center justify-between border-t border-slate-700/50 pt-2 mt-0.5 gap-2"> <button onclick="fitMapToActiveRoute()" class="text-[9px] sm:text-[10px] text-slate-300 font-bold uppercase bg-slate-800 px-2 py-1.5 rounded hover:bg-slate-700 border border-slate-600 transition flex items-center gap-1 flex-1 justify-center shadow"> <i class="fas fa-compress-arrows-alt text-cyan-400"></i> Fit </button> <label class="flex items-center gap-1 sm:gap-2 cursor-pointer bg-slate-800 px-2 py-1.5 rounded hover:bg-slate-700 border border-slate-600 transition flex-1 justify-center shadow"> <span class="text-[9px] sm:text-[10px] text-slate-300 font-bold uppercase">All WPs</span> <input type="checkbox" id="toggleAllWps" onchange="toggleAllWaypointsMap()" class="accent-magenta-500 w-3 h-3"> </label> </div>
                         <p class="text-[8px] sm:text-[9px] text-slate-400 italic text-center">Drag titik putih untuk edit rute.</p>
                     </div>
-                </div> <!-- Flight HUD Overlay (DIPINDAHKAN KE BAWAH & RESPONSIVE) -->
+                </div> <!-- Flight HUD Overlay -->
                 <div id="flightHUDOverlay" class="absolute bottom-4 sm:bottom-8 left-1/2 transform -translate-x-1/2 z-[1100] hidden w-full px-2 sm:w-max sm:px-0">
                     <div class="glass-panel p-2 sm:p-3 rounded-2xl grid grid-cols-4 gap-2 sm:gap-6 shadow-2xl border border-blue-400/30 w-full">
                         <div class="hud-data-box px-1 py-1.5 sm:px-3 sm:py-2">
@@ -386,7 +398,7 @@
                             </div>
                         </div> <button onclick="finishMapBuilder()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white text-[10px] sm:text-xs py-2 rounded-lg shadow transition font-bold mt-1 border border-emerald-500/50"> <i class="fas fa-check-circle mr-1"></i> Create OFP with <span id="bldWpCount">0</span> Waypoints </button>
                     </div>
-                </div> <!-- Active Route Info HUD (HUD Saat View Route on Map) -->
+                </div> <!-- Active Route Info HUD -->
                 <div id="activeRouteInfoHUD" class="absolute bottom-24 sm:bottom-8 left-1/2 transform -translate-x-1/2 z-[1050] hidden w-[95%] sm:w-max px-2 sm:px-0 transition-all duration-300 pointer-events-none">
                     <div class="glass-panel p-3 sm:p-4 rounded-2xl flex flex-col gap-2 shadow-2xl border border-blue-400/50 w-full bg-[#0f172a]/95 backdrop-blur-lg pointer-events-auto">
                         <div class="flex justify-between items-center border-b border-slate-700/50 pb-2 mb-1"> <span class="text-[10px] sm:text-xs font-bold text-blue-400 uppercase tracking-widest"><i class="fas fa-info-circle mr-1"></i> <span id="infoHudRouteName">WIMM-WIII</span></span> <span class="text-[9px] sm:text-[10px] text-cyan-400 font-medium ml-4" id="infoHudAircraft">PK-TWA</span> </div>
@@ -410,7 +422,8 @@
                         </div>
                     </div>
                 </div> <button id="btnAutoDetectMap" onclick="locateUser()" title="Auto Detect Position" class="absolute bottom-20 right-2 sm:bottom-6 sm:right-6 z-[1000] w-10 h-10 sm:w-12 sm:h-12 bg-blue-600/90 hover:bg-blue-500 backdrop-blur border border-blue-400/50 text-white rounded-full shadow-[0_0_20px_rgba(59,130,246,0.5)] flex items-center justify-center transition-all transform hover:scale-105 active:scale-95 group"> <i class="fas fa-crosshairs text-base sm:text-xl group-hover:rotate-90 transition-transform duration-500"></i> </button>
-            </div> <!-- ========================================== -->
+            </div>
+            <!-- ========================================== -->
             <!--         BAGIAN 6: TAB - ROUTE              -->
             <!-- ========================================== -->
             <div id="tab-route" class="tab-content absolute inset-0 p-3 sm:p-6 hidden h-full overflow-hidden">
@@ -514,7 +527,7 @@
                     </div>
                     <div class="p-4 sm:p-6 border-t border-slate-700 bg-slate-900/90 flex justify-end gap-2 sm:gap-3 shrink-0"> <button type="button" onclick="closeRouteForm()" class="bg-slate-800 border border-slate-700 hover:bg-slate-700 px-4 sm:px-6 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm transition">Discard</button> <button type="button" onclick="saveRoute()" class="bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 px-6 sm:px-8 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition shadow-lg shadow-blue-500/20 text-white">Save Plan</button> </div>
                 </div>
-            </div> <!-- BAGIAN 6.2: WAYPOINT SELECTOR MODAL (UNTUK ROUTE) -->
+            </div> <!-- BAGIAN 6.2: WAYPOINT SELECTOR MODAL -->
             <div id="routeWpSelectModal" class="print:hidden fixed inset-0 z-[10010] hidden flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
                 <div class="glass-panel w-full max-w-md h-[70vh] flex flex-col rounded-2xl relative shadow-2xl">
                     <div class="p-4 border-b border-slate-700 flex justify-between items-center shrink-0">
@@ -534,8 +547,8 @@
                         <p class="text-cyan-400 font-medium text-xs sm:text-sm flex items-center truncate"><i class="fas fa-plane mr-2 text-[10px] sm:text-xs"></i> <span id="detRtAircraft">PK-TWA (Gulfstream IV SP)</span></p>
                     </div>
                     <div class="relative z-10 p-4 sm:p-6 pt-0 space-y-3 sm:space-y-4 overflow-y-auto flex-1">
+                        <div class="bg-slate-900/80 p-3 sm:p-4 rounded-xl border border-slate-700/50 flex justify-between items-center"> <span class="text-[10px] sm:text-xs text-slate-400 uppercase">Routing</span> <span id="detRtOriginDest" class="font-bold text-white text-xs sm:text-sm truncate max-w-[60%]">WIMM <i class="fas fa-arrow-right text-blue-400 mx-1 sm:mx-2 text-[8px] sm:text-xs"></i> WIII</span> </div>
                         <div class="bg-slate-900/80 p-3 sm:p-4 rounded-xl border border-slate-700/50 flex flex-col gap-3">
-                            <div class="flex justify-between items-center pb-2 sm:pb-3 border-b border-slate-700/50"> <span class="text-[10px] sm:text-xs text-slate-400 uppercase">Routing</span> <span id="detRtOriginDest" class="font-bold text-white text-xs sm:text-sm truncate max-w-[60%]">WIMM <i class="fas fa-arrow-right text-blue-400 mx-1 sm:mx-2 text-[8px] sm:text-xs"></i> WIII</span> </div>
                             <div class="grid grid-cols-3 gap-1 sm:gap-2 text-center pt-1">
                                 <div>
                                     <p class="text-[8px] sm:text-[10px] text-slate-500 uppercase">Total Dist</p>
@@ -585,151 +598,17 @@
             <div id="waypointModal" class="print:hidden fixed inset-0 z-[10000] hidden flex items-center justify-center bg-black/60 backdrop-blur-sm p-2 sm:p-4">
                 <div class="glass-panel w-full max-w-lg p-5 sm:p-6 rounded-2xl relative shadow-2xl max-h-[95vh] overflow-y-auto"> <button onclick="closeWaypointModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white z-50 cursor-pointer p-1"><i class="fas fa-times text-lg"></i></button>
                     <h3 id="wpModalTitle" class="text-base sm:text-xl font-bold mb-4 sm:mb-5 border-b border-slate-700 pb-2 sm:pb-3"><i class="fas fa-map-marker-alt text-blue-400 mr-2"></i>Add New Waypoint</h3>
-                    <form id="waypointForm" onsubmit=<div id="airportExtraFields"
-class="hidden space-y-4 pt-4 border-t border-slate-700">
-
-<h4 class="text-xs font-bold text-emerald-400 uppercase tracking-widest">
-<i class="fas fa-broadcast-tower mr-2"></i>
-Airport Technical Data
-</h4>
-
-<div class="grid grid-cols-2 gap-3">
-
-<div>
-<label class="text-[10px] text-slate-400 block mb-1">
-Gen. Freq
-</label>
-
-<input type="text"
-id="apGenFreq"
-class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-xs outline-none focus:border-emerald-500">
-</div>
-
-<div>
-<label class="text-[10px] text-slate-400 block mb-1">
-Runway No.
-</label>
-
-<input type="text"
-id="apRunway"
-placeholder="05/23"
-class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-xs outline-none focus:border-emerald-500">
-</div>
-
-</div>
-
-
-<!-- Tower -->
-<div class="bg-slate-900/40 p-3 rounded-xl border border-slate-700/50">
-
-<div class="flex justify-between items-center mb-2">
-
-<label class="text-[10px] text-slate-400 uppercase font-bold">
-Tower List
-</label>
-
-<button type="button"
-onclick="addTowerRow()"
-class="text-[10px] bg-blue-600/30 text-blue-400 px-2 py-1 rounded hover:bg-blue-600/50 transition">
-
-<i class="fas fa-plus"></i> Tower
-</button>
-
-</div>
-
-<div id="towerInputsContainer" class="space-y-2"></div>
-
-</div>
-
-
-<!-- Ground -->
-<div class="grid grid-cols-2 gap-3">
-
-<div>
-<label class="text-[10px] text-slate-400 block mb-1">
-Ground Name
-</label>
-
-<input type="text"
-id="apGroundName"
-class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-xs outline-none focus:border-emerald-500">
-</div>
-
-<div>
-<label class="text-[10px] text-slate-400 block mb-1">
-Ground Freq
-</label>
-
-<input type="text"
-id="apGroundFreq"
-class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-xs outline-none focus:border-emerald-500">
-</div>
-
-</div>
-
-
-<!-- Navaids -->
-<div class="grid grid-cols-3 gap-2">
-
-<!-- VOR -->
-<div class="bg-slate-900/40 p-2 rounded border border-slate-700/50">
-<p class="text-[9px] text-slate-500 uppercase mb-1">VOR</p>
-
-<input type="text"
-id="apVorName"
-placeholder="Name"
-class="w-full bg-transparent border-b border-slate-700 text-[10px] outline-none mb-1">
-
-<input type="text"
-id="apVorFreq"
-placeholder="Freq"
-class="w-full bg-transparent border-b border-slate-700 text-[10px] outline-none">
-</div>
-
-<!-- ILS -->
-<div class="bg-slate-900/40 p-2 rounded border border-slate-700/50">
-<p class="text-[9px] text-slate-500 uppercase mb-1">ILS</p>
-
-<input type="text"
-id="apIlsName"
-placeholder="Name"
-class="w-full bg-transparent border-b border-slate-700 text-[10px] outline-none mb-1">
-
-<input type="text"
-id="apIlsFreq"
-placeholder="Freq"
-class="w-full bg-transparent border-b border-slate-700 text-[10px] outline-none">
-</div>
-
-<!-- NDB -->
-<div class="bg-slate-900/40 p-2 rounded border border-slate-700/50">
-<p class="text-[9px] text-slate-500 uppercase mb-1">NDB</p>
-
-<input type="text"
-id="apNdbName"
-placeholder="Name"
-class="w-full bg-transparent border-b border-slate-700 text-[10px] outline-none mb-1">
-
-<input type="text"
-id="apNdbFreq"
-placeholder="Freq"
-class="w-full bg-transparent border-b border-slate-700 text-[10px] outline-none">
-</div>
-
-</div>
-
-</div>
-"saveWaypoint(event)" class="space-y-3 sm:space-y-4"> <input type="hidden" id="wpId">
+                    <form id="waypointForm" onsubmit="saveWaypoint(event)" class="space-y-3 sm:space-y-4"> <input type="hidden" id="wpId">
                         <div class="grid grid-cols-2 gap-3 sm:gap-4">
                             <div> <label class="text-[10px] sm:text-xs text-slate-400 mb-1 block">Waypoint Name</label> <input type="text" id="wpName" required placeholder="e.g. WIMM" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs sm:text-sm outline-none focus:border-blue-500 uppercase"> </div>
-                            <div> <label class="text-[10px] sm:text-xs text-slate-400 mb-1 block">Waypoint Type</label> <select id="wpType" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs sm:text-sm outline-none focus:border-blue-500">
+                            <div> <label class="text-[10px] sm:text-xs text-slate-400 mb-1 block">Waypoint Type</label> <select id="wpType" onchange="toggleWpTypeFields()" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs sm:text-sm outline-none focus:border-blue-500">
                                     <option value="vfr">VFR</option>
                                     <option value="airport">Airport</option>
                                     <option value="heliport">Heliport</option>
                                 </select> </div>
                         </div> <!-- Coordinate Format Toggle -->
                         <div class="bg-slate-900/50 p-2 sm:p-3 rounded-lg border border-slate-700/50 mt-2 sm:mt-4"> <label class="text-[10px] sm:text-xs text-slate-400 mb-2 block font-semibold">Coordinate Format</label>
-                            <div class="flex flex-col sm:flex-row gap-2 sm:gap-4 mb-3 text-[10px] sm:text-sm"> <label class="flex items-center gap-2 cursor-pointer w-max"> <input type="radio" name="coordFormat" value="decimal" checked onchange="toggleCoordFormat()" class="accent-blue-500"> Decimal </label> <label class="flex items-center gap-2 cursor-pointer w-max"> <input type="radio" name="coordFormat" value="dms" onchange="toggleCoordFormat()" class="accent-blue-500"> Derajat Menit Detik (DMS) </label> </div> <!-- Decimal Inputs -->
+                            <div class="flex flex-col sm:flex-row gap-2 sm:gap-4 mb-3 text-[10px] sm:text-sm"> <label class="flex items-center gap-2 cursor-pointer w-max"> <input type="radio" name="coordFormat" value="decimal" checked onchange="toggleCoordFormat()" class="accent-blue-500"> Decimal </label> <label class="flex items-center gap-2 cursor-pointer w-max"> <input type="radio" name="coordFormat" value="dms" onchange="toggleCoordFormat()" class="accent-blue-500"> DMS </label> </div> <!-- Decimal Inputs -->
                             <div id="coordDecimalGroup" class="grid grid-cols-2 gap-3 sm:gap-4">
                                 <div> <label class="text-[9px] sm:text-[10px] text-slate-500 uppercase">Latitude</label> <input type="number" step="any" id="wpLatDec" placeholder="e.g. 3.5952" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs sm:text-sm outline-none focus:border-blue-500"> </div>
                                 <div> <label class="text-[9px] sm:text-[10px] text-slate-500 uppercase">Longitude</label> <input type="number" step="any" id="wpLonDec" placeholder="e.g. 98.6722" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs sm:text-sm outline-none focus:border-blue-500"> </div>
@@ -756,8 +635,42 @@ class="w-full bg-transparent border-b border-slate-700 text-[10px] outline-none"
                             </div>
                         </div>
                         <div> <label class="text-[10px] sm:text-xs text-slate-400 mb-1 block">Elevation (Feet)</label>
-                            <div class="flex gap-2"> <input type="number" step="any" id="wpElev" required class="flex-1 bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs sm:text-sm outline-none focus:border-blue-500" placeholder="e.g. 23"> <button type="button" onclick="syncElevation()" id="btnSyncElev" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 sm:px-4 py-2 rounded-lg text-[10px] sm:text-xs font-medium transition flex items-center shrink-0"> <i class="fas fa-cloud-download-alt mr-1 sm:mr-2"></i><span class="hidden sm:inline">Sync </span>Elevasi </button> </div>
-                            <p id="elevStatus" class="text-[9px] sm:text-[10px] text-emerald-400 mt-1 hidden"></p>
+                            <div class="flex gap-2"> <input type="number" step="any" id="wpElev" required class="flex-1 bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs sm:text-sm outline-none focus:border-blue-500" placeholder="e.g. 23"> <button type="button" onclick="syncElevation()" id="btnSyncElev" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 sm:px-4 py-2 rounded-lg text-[10px] sm:text-xs font-medium transition flex items-center shrink-0"> <i class="fas fa-cloud-download-alt mr-1 sm:mr-2"></i>Sync Elev </button> </div>
+                        </div> <!-- AIRPORT EXTRA FIELDS -->
+                        <div id="airportExtraFields" class="hidden space-y-4 pt-4 border-t border-slate-700">
+                            <h4 class="text-xs font-bold text-emerald-400 uppercase tracking-widest"><i class="fas fa-broadcast-tower mr-2"></i>Airport Tech Data</h4>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div><label class="text-[10px] text-slate-400 block mb-1">Gen. Freq</label><input type="text" id="apGenFreq" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-xs outline-none focus:border-emerald-500"></div>
+                                <div><label class="text-[10px] text-slate-400 block mb-1">Runway No.</label><input type="text" id="apRunway" placeholder="e.g. 05/23" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-xs outline-none focus:border-emerald-500"></div>
+                            </div>
+                            <div class="bg-slate-900/40 p-3 rounded-xl border border-slate-700/50">
+                                <div class="flex justify-between items-center mb-2">
+                                    <label class="text-[10px] text-slate-400 uppercase font-bold">Tower Name & Freq</label>
+                                    <button type="button" onclick="addTowerRow()" class="text-[10px] bg-blue-600/30 text-blue-400 px-2 py-1 rounded hover:bg-blue-600/50 transition"><i class="fas fa-plus"></i></button>
+                                </div>
+                                <div id="towerInputsContainer" class="space-y-2"> <!-- Tower rows --> </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div><label class="text-[10px] text-slate-400 block mb-1">Ground Name</label><input type="text" id="apGroundName" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-xs outline-none focus:border-emerald-500"></div>
+                                <div><label class="text-[10px] text-slate-400 block mb-1">Ground Freq</label><input type="text" id="apGroundFreq" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-xs outline-none focus:border-emerald-500"></div>
+                            </div>
+                            <div class="grid grid-cols-3 gap-2">
+                                <div class="bg-slate-900/40 p-2 rounded border border-slate-700/50">
+                                    <p class="text-[9px] text-slate-500 uppercase mb-1">VOR (Nm/Fr)</p>
+                                    <input type="text" id="apVorName" placeholder="Name" class="w-full bg-transparent border-b border-slate-700 text-[10px] mb-1 outline-none">
+                                    <input type="text" id="apVorFreq" placeholder="Freq" class="w-full bg-transparent border-b border-slate-700 text-[10px] outline-none">
+                                </div>
+                                <div class="bg-slate-900/40 p-2 rounded border border-slate-700/50">
+                                    <p class="text-[9px] text-slate-500 uppercase mb-1">ILS (Nm/Fr)</p>
+                                    <input type="text" id="apIlsName" placeholder="Name" class="w-full bg-transparent border-b border-slate-700 text-[10px] mb-1 outline-none">
+                                    <input type="text" id="apIlsFreq" placeholder="Freq" class="w-full bg-transparent border-b border-slate-700 text-[10px] outline-none">
+                                </div>
+                                <div class="bg-slate-900/40 p-2 rounded border border-slate-700/50">
+                                    <p class="text-[9px] text-slate-500 uppercase mb-1">NDB (Nm/Fr)</p>
+                                    <input type="text" id="apNdbName" placeholder="Name" class="w-full bg-transparent border-b border-slate-700 text-[10px] mb-1 outline-none">
+                                    <input type="text" id="apNdbFreq" placeholder="Freq" class="w-full bg-transparent border-b border-slate-700 text-[10px] outline-none">
+                                </div>
+                            </div>
                         </div>
                         <div class="flex gap-3 pt-2 sm:pt-4 border-t border-slate-700 mt-4 sm:mt-6"> <button type="button" onclick="closeWaypointModal()" class="flex-1 bg-slate-800 border border-slate-700 hover:bg-slate-700 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm transition">Cancel</button> <button type="submit" class="flex-1 bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition shadow-lg shadow-blue-500/20 text-white">Save Data</button> </div>
                     </form>
@@ -769,21 +682,36 @@ class="w-full bg-transparent border-b border-slate-700 text-[10px] outline-none"
                     <p class="text-[10px] sm:text-xs text-slate-400 mb-2 sm:mb-3 leading-relaxed shrink-0"> Masukkan lebih dari 100 waypoint sekaligus dengan format: <br> <code class="bg-slate-800 px-1 sm:px-2 py-0.5 sm:py-1 rounded text-blue-300 break-all sm:break-normal">NAMA DIR_LAT DEG MIN'SEC" DIR_LON DEG MIN'SEC" TYPE</code> <br> Contoh: <code class="text-emerald-300">RANDU S07 06'10" E109 19'31" VFR</code> </p> <textarea id="bulkWaypointData" class="w-full flex-1 min-h-[150px] bg-slate-800/80 border border-slate-700 rounded-xl p-3 sm:p-4 text-[10px] sm:text-sm text-white font-mono outline-none focus:border-blue-500 whitespace-pre" placeholder="RANDU S07 06'10&quot; E109 19'31&quot; VFR&#10;KNO N03 38'14&quot; E098 52'43&quot; AIRPORT"></textarea>
                     <div class="flex gap-2 sm:gap-3 pt-3 sm:pt-4 mt-1 sm:mt-2 shrink-0"> <button onclick="closeParseModal()" class="flex-1 bg-slate-800 border border-slate-700 hover:bg-slate-700 py-2 sm:py-3 rounded-xl text-xs sm:text-sm transition font-medium">Batal</button> <button id="btnProcessBulk" onclick="processBulkWaypoints()" class="flex-[2] bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 py-2 sm:py-3 rounded-xl text-xs sm:text-sm font-bold transition shadow-lg shadow-emerald-500/20 text-white flex items-center justify-center"> Import & Auto Sync Elevasi </button> </div>
                 </div>
-            </div> <!-- BAGIAN 7.3: WAYPOINT DETAIL MODAL (NEW) -->
+            </div> <!-- BAGIAN 7.3: WAYPOINT DETAIL MODAL -->
             <div id="waypointDetailModal" class="print:hidden fixed inset-0 z-[10010] hidden flex items-center justify-center bg-black/60 backdrop-blur-sm p-2 sm:p-4">
-                <div class="glass-panel w-full max-w-md p-0 rounded-2xl relative shadow-2xl overflow-hidden flex flex-col">
+                <div class="glass-panel w-full max-w-md p-0 rounded-2xl relative shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
                     <div class="absolute top-0 left-0 w-full h-20 bg-gradient-to-br from-blue-900/60 to-slate-900 z-0"></div> <button onclick="closeWaypointDetail()" class="absolute top-3 right-3 text-slate-300 hover:text-white z-50 bg-black/40 rounded-full w-8 h-8 flex items-center justify-center cursor-pointer transition"><i class="fas fa-times"></i></button>
                     <div class="relative z-10 pt-6 px-6 flex flex-col items-center text-center">
                         <div id="detWpIcon" class="w-14 h-14 bg-blue-500 rounded-full flex items-center justify-center text-white text-xl shadow-lg mb-3 border-2 border-slate-800"></div>
                         <h2 id="detWpName" class="text-2xl font-bold text-white tracking-widest uppercase">WIMM</h2> <span id="detWpType" class="mt-1 px-3 py-0.5 bg-slate-800 text-slate-400 border border-slate-700 rounded-full text-[10px] font-semibold uppercase">AIRPORT</span>
                     </div>
-                    <div class="relative z-10 p-6 space-y-3">
+                    <div class="relative z-10 p-6 space-y-3 overflow-y-auto">
                         <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-700/50 space-y-2">
                             <div class="flex justify-between text-xs"><span class="text-slate-500">Latitude</span><span id="detWpLat" class="text-white font-mono"></span></div>
                             <div class="flex justify-between text-xs"><span class="text-slate-500">Longitude</span><span id="detWpLon" class="text-white font-mono"></span></div>
                             <div class="flex justify-between text-xs pt-2 border-t border-slate-800"><span class="text-slate-500">Elevation</span><span class="text-white font-bold"><span id="detWpElev"></span> ft</span></div>
+                        </div> <!-- AIRPORT DETAILS SECTION -->
+                        <div id="detAirportSection" class="hidden bg-emerald-900/20 border border-emerald-500/20 p-4 rounded-xl space-y-3">
+                            <div class="grid grid-cols-2 gap-4">
+                                <div><p class="text-[9px] text-emerald-400 uppercase font-bold">Gen. Freq</p><p id="detApFreq" class="text-xs text-white font-mono">-</p></div>
+                                <div><p class="text-[9px] text-emerald-400 uppercase font-bold">Runway</p><p id="detApRunway" class="text-xs text-white font-mono">-</p></div>
+                            </div>
+                            <div id="detApTowersList" class="space-y-1 py-1 border-t border-emerald-500/10"> </div>
+                            <div class="grid grid-cols-2 gap-4 border-t border-emerald-500/10 pt-2">
+                                <div><p class="text-[9px] text-emerald-400 uppercase font-bold">Ground</p><p id="detApGround" class="text-[10px] text-white font-mono">-</p></div>
+                                <div><p class="text-[9px] text-emerald-400 uppercase font-bold">VOR</p><p id="detApVor" class="text-[10px] text-white font-mono">-</p></div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div><p class="text-[9px] text-emerald-400 uppercase font-bold">ILS</p><p id="detApIls" class="text-[10px] text-white font-mono">-</p></div>
+                                <div><p class="text-[9px] text-emerald-400 uppercase font-bold">NDB</p><p id="detApNdb" class="text-[10px] text-white font-mono">-</p></div>
+                            </div>
                         </div>
-                        <div class="grid grid-cols-3 gap-2"> <button id="btnWpShowMap" class="bg-emerald-600 hover:bg-emerald-500 text-white py-2.5 rounded-xl text-xs transition font-bold flex flex-col items-center gap-1"><i class="fas fa-map-marked-alt text-lg"></i> Map</button> <button id="btnWpEdit" class="bg-blue-600 hover:bg-blue-500 text-white py-2.5 rounded-xl text-xs transition font-bold flex flex-col items-center gap-1"><i class="fas fa-edit text-lg"></i> Edit</button> <button id="btnWpDelete" class="bg-red-600/20 hover:bg-red-600/40 text-red-400 border border-red-500/30 py-2.5 rounded-xl text-xs transition font-bold flex flex-col items-center gap-1"><i class="fas fa-trash text-lg"></i> Del</button> </div>
+                        <div class="grid grid-cols-3 gap-2 pt-2"> <button id="btnWpShowMap" class="bg-emerald-600 hover:bg-emerald-500 text-white py-2.5 rounded-xl text-xs transition font-bold flex flex-col items-center gap-1"><i class="fas fa-map-marked-alt text-lg"></i> Map</button> <button id="btnWpEdit" class="bg-blue-600 hover:bg-blue-500 text-white py-2.5 rounded-xl text-xs transition font-bold flex flex-col items-center gap-1"><i class="fas fa-edit text-lg"></i> Edit</button> <button id="btnWpDelete" class="bg-red-600/20 hover:bg-red-600/40 text-red-400 border border-red-500/30 py-2.5 rounded-xl text-xs transition font-bold flex flex-col items-center gap-1"><i class="fas fa-trash text-lg"></i> Del</button> </div>
                     </div>
                 </div>
             </div> <!-- ========================================== -->
@@ -855,66 +783,11 @@ class="w-full bg-transparent border-b border-slate-700 text-[10px] outline-none"
                 </div>
             </div>
         </main>
-    </div> <!-- AREA CETAK OFP (Hanya Tampil Saat Dicetak / Ctrl+P) -->
+    </div> <!-- AREA CETAK OFP -->
     <div id="printArea" class="hidden print:block bg-white text-black p-8 min-h-screen absolute inset-0 z-[99999]"></div> <!-- ========================================== -->
     <!--         BAGIAN 9: JAVASCRIPT LOGIC         -->
     <!-- ========================================== -->
     <script>
-
-function toggleWpTypeFields() {
-
-const type = document.getElementById('wpType').value;
-const extra = document.getElementById('airportExtraFields');
-
-if (type === 'airport') {
-extra.classList.remove('hidden');
-
-if (
-document.getElementById('towerInputsContainer')
-.children.length === 0
-) {
-addTowerRow();
-}
-
-} else {
-extra.classList.add('hidden');
-}
-}
-
-
-
-function addTowerRow(name = '', freq = '') {
-
-const container = document.getElementById(
-'towerInputsContainer'
-);
-
-const div = document.createElement('div');
-
-div.className =
-'tower-row flex gap-2 items-center';
-
-div.innerHTML = `
-<input type="text"
-value="${name}"
-placeholder="Tower Name"
-class="twr-name flex-[2] bg-slate-800 border border-slate-700 rounded px-2 py-1 text-[10px] text-white outline-none focus:border-blue-500">
-
-<input type="text"
-value="${freq}"
-placeholder="Freq"
-class="twr-freq flex-[1] bg-slate-800 border border-slate-700 rounded px-2 py-1 text-[10px] text-white outline-none focus:border-blue-500">
-
-<button type="button"
-onclick="this.parentElement.remove()"
-class="text-red-400 hover:text-red-300 p-1">
-
-<i class="fas fa-minus-circle"></i>
-</button>
-`;
-
-container.appendChild(div);
-}
         // --- KONFIGURASI GOOGLE SHEETS ---
         const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyBWYvnZziF0PkT56vCl7mUqZi5ME5O6LaqQ913L5q5Hq4M-fyKnoOf_pOFlbUUwn4mJg/exec';
         // --- GLOBAL STATE ---
@@ -1313,54 +1186,52 @@ container.appendChild(div);
             // Optimasi Performa Mesin Leaflet
             map = L.map('realMap', {
                 zoomControl: false,
-                preferCanvas: true, // Mempercepat rendering garis/rute dengan HTML5 Canvas
-                wheelPxPerZoomLevel: 120, // Scroll zoom lebih halus
-                fadeAnimation: true, // Transisi zoom yang halus
+                preferCanvas: true,
+                wheelPxPerZoomLevel: 120,
+                fadeAnimation: true,
                 markerZoomAnimation: true
             }).setView([-0.789, 118.921], 5);
-            L.control.zoom({
-                position: 'bottomleft'
-            }).addTo(map);
-            // Optimasi Penarikan Data Tile (Gambar Peta)
+
+            L.control.zoom({ position: 'bottomleft' }).addTo(map);
+
             const tileOpt = {
                 maxZoom: 19,
-                keepBuffer: 8, // Simpan area peta yang luas di memori agar geser peta tidak blank/delay
-                updateWhenZooming: false, // Jangan mendownload peta saat sedang animasi Zoom
-                updateInterval: 50, // Tarik data seketika saat peta bergeser (default 200ms)
+                keepBuffer: 8,
+                updateWhenZooming: false,
+                updateInterval: 50,
                 crossOrigin: true
             };
-            const esriImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-                ...tileOpt,
-                attribution: '&copy; Esri'
-            });
-            const esriLabels = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', {
-                ...tileOpt
-            });
+
+            // Definisi Layer
+            const esriImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { ...tileOpt, attribution: '&copy; Esri' });
+            const esriLabels = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', { ...tileOpt });
             const satelliteHybrid = L.layerGroup([esriImagery, esriLabels]);
-            // PERBAIKAN: Ganti OpenStreetMap ke Esri World Street Map untuk menghindari "Access Blocked"
-            const streetMap = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
-                ...tileOpt,
-                attribution: '&copy; Esri'
-            });
-            // GANTI: Terrain Map ke Google Terrain untuk visual 3D shaded relief yang sangat realistis dan cepat
-            const terrainMap = L.tileLayer('https://mt1.google.com/vt/lyrs=p&x={x}&y={y}&z={z}', {
-                ...tileOpt,
-                attribution: '&copy; Google'
-            });
+            const streetMap = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', { ...tileOpt, attribution: '&copy; Esri' });
+            const terrainMap = L.tileLayer('https://mt1.google.com/vt/lyrs=p&x={x}&y={y}&z={z}', { ...tileOpt, attribution: '&copy; Google' });
+
             satelliteHybrid.addTo(map);
-            L.control.layers({
-                "Satellite (Default)": satelliteHybrid,
-                "Street View": streetMap,
-                "Terrain View": terrainMap
-            }, null, {
-                position: 'topright'
-            }).addTo(map);
-            const controlContainer = map.getContainer().querySelector('.leaflet-control-container');
-            document.getElementById('tab-map').appendChild(controlContainer);
+
+            const baseMaps = {
+                "<span class='text-white font-medium'>Satellite Hybrid</span>": satelliteHybrid,
+                "<span class='text-white font-medium'>Street View</span>": streetMap,
+                "<span class='text-white font-medium'>Terrain View</span>": terrainMap
+            };
+            
+            L.control.layers(baseMaps, null, { position: 'topright', collapsed: true }).addTo(map);
+
+            // Pindahkan kontainer kontrol agar stabil
+            const mapContainer = map.getContainer();
+            const controlContainer = mapContainer.querySelector('.leaflet-control-container');
+            if (controlContainer) {
+                document.getElementById('tab-map').appendChild(controlContainer);
+            }
+
             map.on('click', handleMapClick);
+
             waypointLayerGroup = L.layerGroup().addTo(map);
             activeRouteLayerGroup = L.layerGroup().addTo(map);
             mapBuilderLayerGroup = L.layerGroup().addTo(map);
+
             updateMapWaypoints();
         }
         async function handleMapClick(e) {
@@ -1439,7 +1310,7 @@ container.appendChild(div);
 
         function addToRoute(id) {
             const wp = waypointsData.find(w => w.id === id);
-            if (!wp) return; // Jika Form Route sedang terbuka (misal di tab route), proses langsung ke form
+            if (!wp) return;
             if (!document.getElementById('routeFormModal').classList.contains('hidden')) {
                 currentRouteWps.push({
                     ...wp
@@ -1447,12 +1318,12 @@ container.appendChild(div);
                 renderOFPTable();
                 map.closePopup();
                 return;
-            } // Jika sedang dalam simulasi/navigasi, cegah penambahan
+            }
             if (flightMode !== 'none') {
                 alert("Harap matikan mode Simulasi/Navigasi terlebih dahulu.");
                 return;
-            } // Bersihkan Active Route agar tidak tumpang tindih jika user ingin merangkai rute baru
-            if (activeMapRouteId) clearActiveMapRoute(); // Aksi Default: Buka HUD Builder di Map
+            }
+            if (activeMapRouteId) clearActiveMapRoute();
             mapBuilderWps.push({
                 ...wp
             });
@@ -1534,8 +1405,8 @@ container.appendChild(div);
                 });
                 midMarker.on('dragend', (e) => {
                     const markerLatLng = e.target.getLatLng();
-                    handleBuilderTrackDrop(markerLatLng.lat, markerLatLng.lng, i + 1); // Kembalikan visual garis rute ke posisi semula jika pengguna membatalkan (cancel) drop
-                    polyline.setLatLngs(latlngs); // Kembalikan posisi marker (titik drag putih) ke tengah garis
+                    handleBuilderTrackDrop(markerLatLng.lat, markerLatLng.lng, i + 1);
+                    polyline.setLatLngs(latlngs);
                     midMarker.setLatLng([midLat, midLon]);
                 });
             }
@@ -1546,7 +1417,7 @@ container.appendChild(div);
                     wp: wp,
                     dist: calcDistanceNM(lat, lng, wp.lat, wp.lon)
                 };
-            }); // Mengubah radius deteksi waypoint menjadi 5 NM
+            });
             nearbyWps = nearbyWps.filter(item => item.dist <= 5).sort((a, b) => a.dist - b.dist);
             if (nearbyWps.length > 0) {
                 let listHtml = '';
@@ -1597,7 +1468,7 @@ container.appendChild(div);
             const acId = document.getElementById('builderAircraft').value;
             const fuelOb = document.getElementById('builderFuelOnboard').value;
             switchTab('route');
-            openRouteForm(); // Initialize blank form // Transfer built route to form
+            openRouteForm();
             currentRouteWps = [...mapBuilderWps];
             if (acId) {
                 document.getElementById('rtAircraft').value = acId;
@@ -1607,9 +1478,9 @@ container.appendChild(div);
                 document.getElementById('rtFuelOnboard').value = fuelOb;
             }
             renderOFPTable();
-            cancelMapBuilder(); // Clear HUD & Map lines
+            cancelMapBuilder();
         }
-        // --- MAP ACTIVE ROUTE (EXISTING) ---
+        // --- MAP ACTIVE ROUTE ---
         function viewRouteOnMap(id) {
             activeMapRouteId = id;
             if (document.getElementById('toggleAllWps')) document.getElementById('toggleAllWps').checked = false;
@@ -1634,7 +1505,7 @@ container.appendChild(div);
             const rt = routesData.find(r => r.id === activeMapRouteId);
             if (!rt || !rt.waypoints || rt.waypoints.length === 0) return;
             const latlngs = rt.waypoints.map(wp => [wp.lat, wp.lon]);
-            const bounds = L.latLngBounds(latlngs); // Peta akan otomatis melakukan zoom out / in menyesuaikan rute ke ukuran normal
+            const bounds = L.latLngBounds(latlngs);
             map.flyToBounds(bounds, {
                 padding: [50, 50],
                 duration: 1.5
@@ -1652,7 +1523,7 @@ container.appendChild(div);
             document.getElementById('infoHudDist').textContent = rt.totalDist;
             document.getElementById('infoHudEet').textContent = rt.totalEET;
             const fob = rt.fuelOnboard || 0;
-            document.getElementById('infoHudFOB').textContent = fob + (fuelUnit ? ' ' + fuelUnit : ''); // Recalculate secara real-time berdasarkan jarak WP aktif saat ini
+            document.getElementById('infoHudFOB').textContent = fob + (fuelUnit ? ' ' + fuelUnit : '');
             let totalDecHours = 0;
             if (rt.speed > 0 && rt.waypoints && rt.waypoints.length > 1) {
                 for (let i = 1; i < rt.waypoints.length; i++) {
@@ -1712,8 +1583,8 @@ container.appendChild(div);
                 });
                 midMarker.on('dragend', (e) => {
                     const markerLatLng = e.target.getLatLng();
-                    handleTrackDrop(markerLatLng.lat, markerLatLng.lng, i + 1); // Kembalikan visual garis rute ke posisi semula jika pengguna membatalkan drop
-                    polyline.setLatLngs(latlngs); // Kembalikan posisi marker ke tengah garis
+                    handleTrackDrop(markerLatLng.lat, markerLatLng.lng, i + 1);
+                    polyline.setLatLngs(latlngs);
                     midMarker.setLatLng([midLat, midLon]);
                 });
             }
@@ -1724,7 +1595,7 @@ container.appendChild(div);
                     wp: wp,
                     dist: calcDistanceNM(lat, lng, wp.lat, wp.lon)
                 };
-            }); // Mengubah radius deteksi waypoint menjadi 5 NM
+            });
             nearbyWps = nearbyWps.filter(item => item.dist <= 5).sort((a, b) => a.dist - b.dist);
             if (nearbyWps.length > 0) {
                 let listHtml = '';
@@ -1787,7 +1658,6 @@ container.appendChild(div);
             filtered.forEach(wp => {
                 const tr = document.createElement('tr');
                 tr.className = 'hover:bg-slate-800/50 transition group cursor-pointer';
-                // Memberikan trigger pop-out saat klik baris
                 tr.onclick = () => showWaypointDetail(wp.id);
                 tr.innerHTML = `<td class="px-3 sm:px-6 py-3 sm:py-4">${getIconHTML(wp.type)}</td><td class="px-3 sm:px-6 py-3 sm:py-4 font-bold text-blue-400 tracking-wide">${wp.name.toUpperCase()}</td><td class="px-3 sm:px-6 py-3 sm:py-4 hidden md:table-cell text-slate-300"><div class="text-[10px] sm:text-xs">${decToDMSStr(wp.lat, true)}</div><div class="text-[10px] sm:text-xs text-slate-400">${decToDMSStr(wp.lon, false)}</div></td><td class="px-3 sm:px-6 py-3 sm:py-4 font-medium">${wp.elev} <span class="text-[8px] sm:text-[10px] text-slate-500">ft</span></td><td class="px-3 sm:px-6 py-3 sm:py-4 text-right opacity-50 group-hover:opacity-100 transition"><button onclick="event.stopPropagation(); editWaypoint('${wp.id}')" class="text-blue-400 hover:text-blue-300 mr-2 sm:mr-3 p-1.5 sm:p-2 bg-blue-500/10 rounded-lg"><i class="fas fa-edit"></i></button><button onclick="event.stopPropagation(); deleteWaypoint('${wp.id}')" class="text-red-400 hover:text-red-300 p-1.5 sm:p-2 bg-red-500/10 rounded-lg"><i class="fas fa-trash"></i></button></td>`;
                 tbody.appendChild(tr);
@@ -1802,7 +1672,31 @@ container.appendChild(div);
             document.getElementById('detWpLat').textContent = decToDMSStr(wp.lat, true);
             document.getElementById('detWpLon').textContent = decToDMSStr(wp.lon, false);
             document.getElementById('detWpElev').textContent = wp.elev;
-            document.getElementById('detWpIcon').innerHTML = getIconHTML(wp.type).replace('mx-auto', ''); // Detail Map button
+            document.getElementById('detWpIcon').innerHTML = getIconHTML(wp.type).replace('mx-auto', '');
+
+            const apSection = document.getElementById('detAirportSection');
+            if (wp.type === 'airport') {
+                apSection.classList.remove('hidden');
+                document.getElementById('detApFreq').textContent = wp.generalFreq || '-';
+                document.getElementById('detApRunway').textContent = wp.runway || '-';
+                document.getElementById('detApGround').textContent = (wp.groundName || wp.groundFreq) ? `${wp.groundName} / ${wp.groundFreq}` : '-';
+                document.getElementById('detApVor').textContent = (wp.vorName || wp.vorFreq) ? `${wp.vorName} / ${wp.vorFreq}` : '-';
+                document.getElementById('detApIls').textContent = (wp.ilsName || wp.ilsFreq) ? `${wp.ilsName} / ${wp.ilsFreq}` : '-';
+                document.getElementById('detApNdb').textContent = (wp.ndbName || wp.ndbFreq) ? `${wp.ndbName} / ${wp.ndbFreq}` : '-';
+
+                const towerList = document.getElementById('detApTowersList');
+                towerList.innerHTML = '';
+                if (wp.towers && wp.towers.length > 0) {
+                    wp.towers.forEach(t => {
+                        towerList.innerHTML += `<div class="flex justify-between text-[10px] border-b border-emerald-500/5 py-1"><span class="text-emerald-300/80 font-medium">TWR: ${t.name}</span><span class="text-white font-mono">${t.freq}</span></div>`;
+                    });
+                } else {
+                    towerList.innerHTML = '<p class="text-[9px] text-slate-500 italic">No Tower Data</p>';
+                }
+            } else {
+                apSection.classList.add('hidden');
+            }
+
             document.getElementById('btnWpShowMap').onclick = () => showWpOnMap(wp.id);
             document.getElementById('btnWpEdit').onclick = () => {
                 closeWaypointDetail();
@@ -1828,13 +1722,36 @@ container.appendChild(div);
                 map.flyTo([wp.lat, wp.lon], 15, {
                     animate: true,
                     duration: 1.5
-                }); // Mencari marker yang sesuai di layer dan membukanya
+                });
                 waypointLayerGroup.eachLayer(layer => {
                     if (layer instanceof L.Marker && layer.getLatLng().lat === wp.lat && layer.getLatLng().lng === wp.lon) {
                         layer.openPopup();
                     }
                 });
             }, 300);
+        }
+
+        function toggleWpTypeFields() {
+            const type = document.getElementById('wpType').value;
+            const extra = document.getElementById('airportExtraFields');
+            if (type === 'airport') {
+                extra.classList.remove('hidden');
+                if (document.getElementById('towerInputsContainer').children.length === 0) addTowerRow();
+            } else {
+                extra.classList.add('hidden');
+            }
+        }
+
+        function addTowerRow(name = '', freq = '') {
+            const container = document.getElementById('towerInputsContainer');
+            const div = document.createElement('div');
+            div.className = 'tower-row flex gap-2 items-center';
+            div.innerHTML = `
+                <input type="text" placeholder="Name" value="${name}" class="twr-name flex-[2] bg-slate-800 border border-slate-700 rounded px-2 py-1 text-[10px] outline-none text-white focus:border-blue-500">
+                <input type="text" placeholder="Freq" value="${freq}" class="twr-freq flex-[1] bg-slate-800 border border-slate-700 rounded px-2 py-1 text-[10px] outline-none text-white focus:border-blue-500 font-mono">
+                <button type="button" onclick="this.parentElement.remove()" class="text-red-400 hover:text-red-300 p-1"><i class="fas fa-minus-circle"></i></button>
+            `;
+            container.appendChild(div);
         }
 
         function toggleAllWaypointsMap() {
@@ -1847,7 +1764,7 @@ container.appendChild(div);
             if (!document.getElementById('wpTooltipStyle')) {
                 const style = document.createElement('style');
                 style.id = 'wpTooltipStyle';
-                style.innerHTML = `.wp-black-label { background-color: #000 !important; color: #fff !important; border: 1px solid #333 !important; padding: 2px 6px; font-weight: 700; font-size: 10px; border-radius: 4px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5); white-space: nowrap; } .wp-black-label::before { border-bottom-color: #000 !important; border-top-color: #000 !important; } .custom-popup .leaflet-popup-content-wrapper { background: #1e293b; color: #f8fafc; border: 1px solid #334155; border-radius: 12px; } .custom-popup .leaflet-popup-tip { background: #1e293b; } .custom-popup .leaflet-popup-content { margin: 12px; font-family: 'Inter', sans-serif; } .custom-popup .leaflet-popup-close-button { color: #94a3b8 !important; top: 8px !important; right: 8px !important; } .custom-popup .leaflet-popup-close-button:hover { color: #f8fafc !important; }`;
+                style.innerHTML = `.wp-black-label { background-color: #000 !important; color: #fff !important; border: 1px solid #333 !important; padding: 2px 6px; font-weight: 700; font-size: 10px; border-radius: 4px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5); white-space: nowrap; } .custom-popup .leaflet-popup-content-wrapper { background: #1e293b; color: #f8fafc; border: 1px solid #334155; border-radius: 12px; } .custom-popup .leaflet-popup-content { margin: 12px; font-family: 'Inter', sans-serif; }`;
                 document.head.appendChild(style);
             }
             let wpsToRender = waypointsData;
@@ -1878,7 +1795,20 @@ container.appendChild(div);
                     className: 'wp-black-label',
                     offset: [0, 10]
                 });
-                const popupHtml = `<div class="min-w-[180px]"><div class="flex items-center gap-2 mb-2 border-b border-slate-600 pb-2">${getIconHTML(wp.type).replace('mx-auto', '')}<h4 class="font-bold text-sm text-blue-400 m-0">${wp.name.toUpperCase()}</h4></div><div class="text-xs text-slate-300 space-y-1 mb-4"><p class="m-0 flex items-center"><i class="fas fa-map-pin w-4 text-center text-slate-400 mr-1"></i> ${decToDMSStr(wp.lat, true)}</p><p class="m-0 flex items-center"><i class="fas fa-map-pin w-4 text-center text-slate-400 opacity-0 mr-1"></i> ${decToDMSStr(wp.lon, false)}</p><p class="m-0 flex items-center mt-1"><i class="fas fa-mountain w-4 text-center text-slate-400 mr-1"></i> ${wp.elev} ft</p></div><div class="flex gap-2"><button onclick="addToRoute('${wp.id}')" class="bg-blue-600 hover:bg-blue-500 text-white px-2 py-1.5 rounded text-[10px] flex-1 transition font-medium"><i class="fas fa-plus mr-1"></i> Route</button><button onclick="editWaypoint('${wp.id}')" class="bg-slate-700 hover:bg-slate-600 border border-slate-600 text-white px-2 py-1.5 rounded text-[10px] flex-1 transition font-medium"><i class="fas fa-edit mr-1"></i> Edit</button></div></div>`;
+
+                let extraHtml = '';
+                if (wp.type === 'airport') {
+                    extraHtml = `
+                    <div class="mt-3 pt-2 border-t border-slate-700/50">
+                        <div class="grid grid-cols-2 gap-x-4 gap-y-1 text-[10px]">
+                            <p class="m-0"><span class="text-slate-500">RWY:</span> <span class="text-white">${wp.runway || '-'}</span></p>
+                            <p class="m-0"><span class="text-slate-500">FREQ:</span> <span class="text-white">${wp.generalFreq || '-'}</span></p>
+                        </div>
+                        ${wp.towers && wp.towers.length > 0 ? `<div class="mt-1 text-[9px] text-emerald-400 font-bold">TWR: ${wp.towers[0].name} (${wp.towers[0].freq})</div>` : ''}
+                    </div>`;
+                }
+
+                const popupHtml = `<div class="min-w-[180px]"><div class="flex items-center gap-2 mb-2 border-b border-slate-600 pb-2">${getIconHTML(wp.type).replace('mx-auto', '')}<h4 class="font-bold text-sm text-blue-400 m-0">${wp.name.toUpperCase()}</h4></div><div class="text-xs text-slate-300 space-y-1 mb-2"><p class="m-0 flex items-center"><i class="fas fa-map-pin w-4 text-center text-slate-400 mr-1"></i> ${decToDMSStr(wp.lat, true)}</p><p class="m-0 flex items-center"><i class="fas fa-map-pin w-4 text-center text-slate-400 opacity-0 mr-1"></i> ${decToDMSStr(wp.lon, false)}</p><p class="m-0 flex items-center mt-1"><i class="fas fa-mountain w-4 text-center text-slate-400 mr-1"></i> ${wp.elev} ft</p></div>${extraHtml}<div class="flex gap-2 mt-4"><button onclick="addToRoute('${wp.id}')" class="bg-blue-600 hover:bg-blue-500 text-white px-2 py-1.5 rounded text-[10px] flex-1 transition font-medium"><i class="fas fa-plus mr-1"></i> Route</button><button onclick="showWaypointDetail('${wp.id}')" class="bg-slate-700 hover:bg-slate-600 border border-slate-600 text-white px-2 py-1.5 rounded text-[10px] flex-1 transition font-medium"><i class="fas fa-info-circle mr-1"></i> Info</button></div></div>`;
                 marker.bindPopup(popupHtml, {
                     className: 'custom-popup'
                 });
@@ -1886,12 +1816,7 @@ container.appendChild(div);
             });
         }
 
-        /* ===================================================== */
-/* REPLACE FUNCTION saveWaypoint YANG EXISTING DENGAN INI */
-/* SUDAH DIGABUNGKAN DENGAN pendingRouteInsert & Builder  */
-/* ===================================================== */
-
-function saveWaypoint(e) {
+       function saveWaypoint(e) {
 
     e.preventDefault();
 
@@ -2049,7 +1974,269 @@ function saveWaypoint(e) {
         pendingBuilderInsert = null;
     }
 
-}        // ==========================================
+            e.preventDefault();
+            const id = document.getElementById('wpId').value;
+            const isDec = document.querySelector('input[name="coordFormat"][value="decimal"]').checked;
+            let lat = isDec ? parseFloat(document.getElementById('wpLatDec').value) : getDecimalFromDMSForm(true);
+            let lon = isDec ? parseFloat(document.getElementById('wpLonDec').value) : getDecimalFromDMSForm(false);
+            const type = document.getElementById('wpType').value;
+
+            const newWp = {
+                id: id || 'wp_' + Date.now().toString(),
+                name: document.getElementById('wpName').value.toUpperCase(),
+                type: type,
+                lat: lat,
+                lon: lon,
+                elev: parseFloat(document.getElementById('wpElev').value || 0)
+            };
+
+            if (type === 'airport') {
+                newWp.generalFreq = document.getElementById('apGenFreq').value;
+                newWp.runway = document.getElementById('apRunway').value;
+                newWp.groundName = document.getElementById('apGroundName').value;
+                newWp.groundFreq = document.getElementById('apGroundFreq').value;
+                newWp.vorName = document.getElementById('apVorName').value;
+                newWp.vorFreq = document.getElementById('apVorFreq').value;
+                newWp.ilsName = document.getElementById('apIlsName').value;
+                newWp.ilsFreq = document.getElementById('apIlsFreq').value;
+                newWp.ndbName = document.getElementById('apNdbName').value;
+                newWp.ndbFreq = document.getElementById('apNdbFreq').value;
+
+                const towers = [];
+                document.querySelectorAll('.tower-row').forEach(row => {
+                    const n = row.querySelector('.twr-name').value;
+                    const f = row.querySelector('.twr-freq').value;
+                    if (n || f) towers.push({ name: n, freq: f });
+                });
+                newWp.towers = towers;
+            }
+
+            if (id) {
+                const idx = waypointsData.findIndex(w => w.id === id);
+                if (idx !== -1) waypointsData[idx] = newWp;
+            } else {
+                waypointsData.push(newWp);
+            }
+            saveWaypoints();
+            renderWaypoints();
+            updateMapWaypoints();
+            closeWaypointModal();
+        }
+
+        function editWaypoint(id) {
+            const wp = waypointsData.find(w => w.id === id);
+            if (!wp) return;
+            document.getElementById('wpId').value = wp.id;
+            document.getElementById('wpName').value = wp.name;
+            document.getElementById('wpType').value = wp.type;
+            document.getElementById('wpElev').value = wp.elev;
+
+            toggleWpTypeFields();
+            if (wp.type === 'airport') {
+                document.getElementById('apGenFreq').value = wp.generalFreq || '';
+                document.getElementById('apRunway').value = wp.runway || '';
+                document.getElementById('apGroundName').value = wp.groundName || '';
+                document.getElementById('apGroundFreq').value = wp.groundFreq || '';
+                document.getElementById('apVorName').value = wp.vorName || '';
+                document.getElementById('apVorFreq').value = wp.vorFreq || '';
+                document.getElementById('apIlsName').value = wp.ilsName || '';
+                document.getElementById('apIlsFreq').value = wp.ilsFreq || '';
+                document.getElementById('apNdbName').value = wp.ndbName || '';
+                document.getElementById('apNdbFreq').value = wp.ndbFreq || '';
+
+                const container = document.getElementById('towerInputsContainer');
+                container.innerHTML = '';
+                if (wp.towers && wp.towers.length > 0) {
+                    wp.towers.forEach(t => addTowerRow(t.name, t.freq));
+                } else {
+                    addTowerRow();
+                }
+            }
+
+            document.querySelector('input[name="coordFormat"][value="decimal"]').checked = true;
+            document.getElementById('coordDecimalGroup').style.display = 'grid';
+            document.getElementById('coordDMSGroup').style.display = 'none';
+            document.getElementById('wpLatDec').value = wp.lat;
+            document.getElementById('wpLonDec').value = wp.lon;
+            document.getElementById('wpModalTitle').innerHTML = '<i class="fas fa-edit text-blue-400 mr-2"></i>Edit Waypoint';
+            document.getElementById('waypointModal').classList.remove('hidden');
+        }
+
+        function deleteWaypoint(id) {
+            if (confirm("Hapus Waypoint ini dari Database?")) {
+                waypointsData = waypointsData.filter(w => w.id !== id);
+                saveWaypoints();
+                renderWaypoints();
+                updateMapWaypoints();
+            }
+        }
+
+        function toggleCoordFormat() {
+            const isDec = document.querySelector('input[name="coordFormat"][value="decimal"]').checked;
+            if (isDec) {
+                const lat = getDecimalFromDMSForm(true);
+                const lon = getDecimalFromDMSForm(false);
+                if (!isNaN(lat)) document.getElementById('wpLatDec').value = lat.toFixed(6);
+                if (!isNaN(lon)) document.getElementById('wpLonDec').value = lon.toFixed(6);
+                document.getElementById('coordDecimalGroup').style.display = 'grid';
+                document.getElementById('coordDMSGroup').style.display = 'none';
+            } else {
+                const latDec = parseFloat(document.getElementById('wpLatDec').value);
+                const lonDec = parseFloat(document.getElementById('wpLonDec').value);
+                if (!isNaN(latDec)) {
+                    document.getElementById('latDir').value = latDec >= 0 ? 'N' : 'S';
+                    let absLat = Math.abs(latDec);
+                    document.getElementById('latDeg').value = Math.floor(absLat);
+                    let minFloat = (absLat - Math.floor(absLat)) * 60;
+                    document.getElementById('latMin').value = Math.floor(minFloat);
+                    document.getElementById('latSec').value = ((minFloat - Math.floor(minFloat)) * 60).toFixed(2);
+                }
+                if (!isNaN(lonDec)) {
+                    document.getElementById('lonDir').value = lonDec >= 0 ? 'E' : 'W';
+                    let absLon = Math.abs(lonDec);
+                    document.getElementById('lonDeg').value = Math.floor(absLon);
+                    let minFloat = (absLon - Math.floor(absLon)) * 60;
+                    document.getElementById('lonMin').value = Math.floor(minFloat);
+                    document.getElementById('lonSec').value = ((minFloat - Math.floor(minFloat)) * 60).toFixed(2);
+                }
+                document.getElementById('coordDecimalGroup').style.display = 'none';
+                document.getElementById('coordDMSGroup').style.display = 'block';
+            }
+        }
+
+        function openWaypointModal() {
+            document.getElementById('waypointForm').reset();
+            document.getElementById('wpId').value = '';
+            document.getElementById('towerInputsContainer').innerHTML = '';
+            toggleWpTypeFields();
+            ['latDeg', 'latMin', 'latSec', 'lonDeg', 'lonMin', 'lonSec', 'wpLatDec', 'wpLonDec'].forEach(id => {
+                document.getElementById(id).value = '';
+            });
+            document.getElementById('latDir').value = 'N';
+            document.getElementById('lonDir').value = 'E';
+            document.getElementById('wpModalTitle').innerHTML = '<i class="fas fa-map-marker-alt text-blue-400 mr-2"></i>Add New Waypoint';
+            document.querySelector('input[name="coordFormat"][value="decimal"]').checked = true;
+            document.getElementById('coordDecimalGroup').style.display = 'grid';
+            document.getElementById('coordDMSGroup').style.display = 'none';
+            document.getElementById('waypointModal').classList.remove('hidden');
+        }
+
+        function closeWaypointModal() {
+            document.getElementById('waypointModal').classList.add('hidden');
+        }
+
+        function openParseModal() {
+            document.getElementById('bulkWaypointData').value = '';
+            document.getElementById('parseWaypointModal').classList.remove('hidden');
+        }
+
+        function closeParseModal() {
+            document.getElementById('parseWaypointModal').classList.add('hidden');
+        }
+        async function processBulkWaypoints() {
+            const text = document.getElementById('bulkWaypointData').value;
+            if (!text.trim()) {
+                alert("Silahkan masukkan data waypoint.");
+                return;
+            }
+            const lines = text.split('\n');
+            const regex = /([a-zA-Z0-9_-]+)\s+([NS])(\d{1,3})\s+(\d{1,2})'(\d{1,2}(?:\.\d+)?)"\s+([EW])(\d{1,3})\s+(\d{1,2})'(\d{1,2}(?:\.\d+)?)"\s+([a-zA-Z]+)/i;
+            let newWaypoints = [];
+            let lats = [];
+            let lons = [];
+            lines.forEach(line => {
+                const match = line.trim().match(regex);
+                if (match) {
+                    const name = match[1];
+                    const latDir = match[2].toUpperCase();
+                    let lat = parseFloat(match[3]) + (parseFloat(match[4]) / 60) + (parseFloat(match[5]) / 3600);
+                    if (latDir === 'S') lat = -lat;
+                    const lonDir = match[6].toUpperCase();
+                    let lon = parseFloat(match[7]) + (parseFloat(match[8]) / 60) + (parseFloat(match[9]) / 3600);
+                    if (lonDir === 'W') lon = -lon;
+                    let type = match[10].toLowerCase();
+                    if (!['vfr', 'airport', 'heliport'].includes(type)) type = 'vfr';
+                    newWaypoints.push({
+                        id: 'wp_bulk_' + Date.now().toString() + Math.floor(Math.random() * 10000),
+                        name: name.toUpperCase(),
+                        type: type,
+                        lat: lat,
+                        lon: lon,
+                        elev: 0
+                    });
+                    lats.push(lat.toFixed(6));
+                    lons.push(lon.toFixed(6));
+                }
+            });
+            if (newWaypoints.length === 0) {
+                alert("Tidak ada waypoint valid yang ditemukan.");
+                return;
+            }
+            const btn = document.getElementById('btnProcessBulk');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Processing...';
+            btn.disabled = true;
+            try {
+                const chunkSize = 50;
+                for (let i = 0; i < lats.length; i += chunkSize) {
+                    const chunkLats = lats.slice(i, i + chunkSize).join(',');
+                    const chunkLons = lons.slice(i, i + chunkSize).join(',');
+                    const res = await fetch(`https://api.open-meteo.com/v1/elevation?latitude=${chunkLats}&longitude=${chunkLons}`);
+                    const data = await res.json();
+                    if (data.elevation && data.elevation.length > 0) {
+                        for (let j = 0; j < data.elevation.length; j++) {
+                            const elevMeters = data.elevation[j];
+                            newWaypoints[i + j].elev = Math.round(elevMeters * 3.28084);
+                        }
+                    }
+                }
+            } catch (e) {
+                console.error("Gagal sync elevasi massal:", e);
+                alert("Gagal sync elevasi sebagian.");
+            }
+            waypointsData = [...waypointsData, ...newWaypoints];
+            saveWaypoints();
+            renderWaypoints();
+            updateMapWaypoints();
+            closeParseModal();
+            btn.innerHTML = 'Import & Auto Sync Elevasi';
+            btn.disabled = false;
+            alert(`${newWaypoints.length} Waypoint berhasil diimport dan disinkronkan!`);
+        }
+        async function syncElevation() {
+            const btn = document.getElementById('btnSyncElev');
+            const isDec = document.querySelector('input[name="coordFormat"][value="decimal"]').checked;
+            let lat, lon;
+            if (isDec) {
+                lat = parseFloat(document.getElementById('wpLatDec').value);
+                lon = parseFloat(document.getElementById('wpLonDec').value);
+            } else {
+                lat = getDecimalFromDMSForm(true);
+                lon = getDecimalFromDMSForm(false);
+            }
+            if (isNaN(lat) || isNaN(lon)) {
+                alert("Harap isi koordinat Latitude & Longitude.");
+                return;
+            }
+            try {
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Syncing...';
+                btn.disabled = true;
+                const res = await fetch(`https://api.open-meteo.com/v1/elevation?latitude=${lat}&longitude=${lon}`);
+                const data = await res.json();
+                if (data.elevation && data.elevation.length > 0) {
+                    const elevMeters = data.elevation[0];
+                    const elevFeet = Math.round(elevMeters * 3.28084);
+                    document.getElementById('wpElev').value = elevFeet;
+                } else {
+                    throw new Error("Data elevasi kosong.");
+                }
+            } catch (err) {
+                alert("Gagal mengambil data elevasi.");
+            } finally {
+                btn.innerHTML = '<i class="fas fa-cloud-download-alt mr-2"></i>Sync Elev';
+                btn.disabled = false;
+            }
+        }
+        // ==========================================
         // --- AIRCRAFT PROFILE LOGIC             ---
         // ==========================================
         async function loadAircrafts() {
@@ -2175,15 +2362,13 @@ function saveWaypoint(e) {
         async function loadRoutes() {
             const data = await fetchFromSheet('routes');
             if (data !== null) {
-                // Sanitasi data: Memperbaiki format otomatis Google Sheets (Time menjadi Date 1899)
                 routesData = data.map(rt => {
-                    // 1. Perbaiki format ETD jika diubah oleh Google Sheets menjadi ISO Date String
                     if (typeof rt.etd === 'string' && rt.etd.includes('T')) {
                         try {
                             const d = new Date(rt.etd);
                             rt.etd = `${d.getUTCHours().toString().padStart(2, '0')}:${d.getUTCMinutes().toString().padStart(2, '0')}`;
                         } catch (e) {}
-                    } // 2. Kalkulasi ulang Total Jarak & Waktu (EET) secara dinamis agar kebal dari error format
+                    }
                     let totalDist = 0;
                     let totalDecHours = 0;
                     if (rt.waypoints && Array.isArray(rt.waypoints)) {
@@ -2254,7 +2439,7 @@ function saveWaypoint(e) {
                 }
                 totalFuel = totalDecHours * rt.fuelCons;
             }
-            document.getElementById('detRtFuel').textContent = Math.round(totalFuel) + (ac ? ' ' + ac.fuelUnit : ''); // Re-bind Action Buttons
+            document.getElementById('detRtFuel').textContent = Math.round(totalFuel) + (ac ? ' ' + ac.fuelUnit : '');
             document.getElementById('btnDetEdit').onclick = () => {
                 closeRouteDetailModal();
                 editRoute(id);
@@ -2514,7 +2699,7 @@ function saveWaypoint(e) {
             });
             if (currentRouteWps.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="6" class="text-center py-6 text-slate-500 italic">No waypoints added yet. Click [+] to build your route.</td></tr>';
-            } // Auto-fill Route Name (Berdasarkan titik awal & akhir jika tidak diketik manual)
+            }
             const nameInput = document.getElementById('rtName');
             if (nameInput && nameInput.dataset.manualEdit !== 'true') {
                 if (currentRouteWps.length > 0) {
@@ -2603,7 +2788,7 @@ function saveWaypoint(e) {
                 renderRouteList();
             }
         }
-        // --- PRINT ROUTE OFP (NEW FEATURE) ---
+
         function printRouteOFP(id) {
             const rt = routesData.find(r => r.id === id);
             if (!rt) return;
@@ -2616,20 +2801,14 @@ function saveWaypoint(e) {
             const fuelCons = rt.fuelCons || 0;
             const etdVal = rt.etd || "00:00";
             rt.waypoints.forEach((wp, i) => {
-                let dist = 0,
-                    brng = 0,
-                    decHrs = 0,
-                    fuelBurn = 0,
-                    etaHrs = 0;
+                let dist = 0, brng = 0, decHrs = 0, fuelBurn = 0, etaHrs = 0;
                 if (i > 0) {
                     const prevWp = rt.waypoints[i - 1];
                     dist = calcDistanceNM(prevWp.lat, prevWp.lon, wp.lat, wp.lon);
                     brng = calcBearingDeg(prevWp.lat, prevWp.lon, wp.lat, wp.lon);
                     if (speed > 0) decHrs = dist / speed;
                     fuelBurn = decHrs * fuelCons;
-                    totalDist += dist;
-                    totalDecHours += decHrs;
-                    totalFuel += fuelBurn;
+                    totalDist += dist; totalDecHours += decHrs; totalFuel += fuelBurn;
                     etaHrs = totalDecHours;
                 }
                 let distStr = i === 0 ? '-' : formatDecimal(dist);
@@ -2645,9 +2824,7 @@ function saveWaypoint(e) {
                 window.print();
             }, 100);
         }
-        // ==========================================
-        // --- SIMULATION & NAVIGATION LOGIC      ---
-        // ==========================================
+
         function startSimulateRoute(routeId) {
             const rt = routesData.find(r => r.id === routeId);
             if (!rt || rt.waypoints.length < 2) return alert("Rute tidak valid untuk disimulasikan.");
@@ -2656,7 +2833,7 @@ function saveWaypoint(e) {
             flightMode = 'sim';
             closeRouteDetailModal();
             switchTab('map');
-            clearActiveMapRoute(); // Set mode rute & bersihkan peta dari WP lain
+            clearActiveMapRoute();
             activeMapRouteId = routeId;
             if (document.getElementById('toggleAllWps')) document.getElementById('toggleAllWps').checked = false;
             updateMapWaypoints();
@@ -2681,7 +2858,7 @@ function saveWaypoint(e) {
             flightMode = 'nav';
             closeRouteDetailModal();
             switchTab('map');
-            clearActiveMapRoute(); // Set mode rute & bersihkan peta dari WP lain
+            clearActiveMapRoute();
             activeMapRouteId = routeId;
             if (document.getElementById('toggleAllWps')) document.getElementById('toggleAllWps').checked = false;
             updateMapWaypoints();
@@ -2714,7 +2891,7 @@ function saveWaypoint(e) {
             if (flightMarker) {
                 map.removeLayer(flightMarker);
                 flightMarker = null;
-            } // Mengembalikan peta ke kondisi awal (memunculkan semua WP)
+            }
             activeMapRouteId = null;
             if (document.getElementById('toggleAllWps')) document.getElementById('toggleAllWps').checked = false;
             updateMapWaypoints();
@@ -2758,7 +2935,7 @@ function saveWaypoint(e) {
                 animate: true,
                 duration: 0.1,
                 easeLinearity: 1
-            }); // Counter-rotate flight marker agar selalu menghadap ke atas layar
+            });
             if (flightMarker) {
                 const iconElement = flightMarker.getElement();
                 if (iconElement) {
